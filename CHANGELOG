@@ -1,0 +1,24 @@
+
+Upcoming Versions
+-----------------
+
+- Fix initial delay -- timer may be off by a few milliseconds
+
+- More skins
+
+- Fire events on specific ranges
+
+- Use the Page Visiblity API
+
+- Responsive
+
+- IE Support + Safari 5 + Others
+
+- Cleanup
+
+
+
+0.9 (November 20, 2012)
+-----------------------
+
+- Countdown and Statistics mode

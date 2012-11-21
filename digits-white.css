@@ -1,0 +1,105 @@
+
+/* WHITE SKIN
+-------------------------------------------------*/
+
+.digits .top-half-wrapper, 
+.digits .bottom-half-wrapper {
+	width: 100px;
+	height: 50px;
+}
+
+.digits .top-half, 
+.digits .bottom-half {
+	width: 100px;
+	height: 50px;
+	text-align: center;
+	font-family: helvetica, sans;
+	font-weight: bold;
+	font-size: 80px;
+	color: #333;
+	border-left: 3px solid #333;
+	border-right: 3px solid #333;	
+	background: #fff;	
+}
+
+.digits .top-half {
+	border-top: 3px solid #333;
+	border-radius: 10px 10px 0px 0px;
+	line-height: 100px;
+}
+
+.digits .bottom-half {
+	margin-top: 3px;
+	border-bottom: 3px solid #333;
+	border-radius: 0px 0px 10px 10px ;
+	background: #f5f5f5;
+}
+
+
+/* COUNTDOWN MODE
+-------------------------------------------------*/
+
+.digits.countdown .digit:not(:last-child) {
+	margin-right: 10px;
+}
+
+.digits.countdown .digit.second-2 {
+	margin-right: 0;
+}
+
+.digits.countdown .digit.second-1,
+.digits.countdown .digit.minute-1,
+.digits.countdown .digit.hour-1 {
+	margin-left: 50px;
+}
+
+
+/* STATISTICS MODE
+-------------------------------------------------*/
+
+.digits.statistics .digit:not(:last-of-type) {
+	margin-right: 10px;
+}
+
+
+/* LABELS
+-------------------------------------------------*/
+
+.digits .labels {
+	text-align: right;
+	color: #bbb;
+}
+
+.digits .label {
+	display: inline-block;
+	width: 210px;
+	text-align: center;
+	font-family: helvetica, sans;
+	font-size: 12px;
+	letter-spacing: 1px;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 20px 0;
+}
+
+.digits .label.hours,
+.digits .label.minutes,
+.digits .label.seconds {
+	margin-left: 60px;
+}
+
+.digits .label.days:after {
+	content: "Days";
+}
+
+.digits .label.hours:after {
+	content: "Hours";
+}
+
+.digits .label.minutes:after {
+	content: "Minutes";
+}
+
+.digits .label.seconds:after {
+	content: "Seconds";
+}

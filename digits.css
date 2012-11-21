@@ -1,0 +1,57 @@
+
+/* CORE CSS AND ANIMATIONS
+-------------------------------------------------*/
+
+.digits,
+.digits .digit {
+	display: inline-block;
+}
+
+.digits .top-half-wrapper, 
+.digits .bottom-half-wrapper {
+	position: relative;
+}
+
+.digits .top-half, 
+.digits .bottom-half {
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 0;	
+}
+
+.digits .top-half {
+	-webkit-transform-origin: 50% 100%;
+	-moz-transform-origin: 50% 100%;
+	
+	-webkit-transform: perspective(300) rotateX(0deg);	
+	-moz-transform: rotateX(0deg);	
+}
+
+.digits .bottom-half {
+	line-height: 0;
+	
+	-webkit-transform-origin: 50% 0%;
+	-moz-transform-origin: 50% 0%;
+
+	-webkit-transform: perspective(300) rotateX(90deg);
+	-moz-transform: rotateX(90deg);
+}
+
+.digits .no-animation {
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	transition: none !important;
+}
+
+.digits .show {
+	z-index: 10;
+
+	-webkit-transform: perspective(300) rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+}
+
+.digits .roll-over {
+	-webkit-transform: perspective(300) rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+}
