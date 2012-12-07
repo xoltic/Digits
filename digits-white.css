@@ -12,7 +12,7 @@
 .digits .bottom-half {
 	width: 100px;
 	height: 50px;
-	text-shadow: 0px 1px 0px #444;
+	text-shadow: 0px 1px 0px #fafafa;
 	text-align: center;
 	font-family: helvetica, sans;
 	font-weight: bold;
@@ -34,7 +34,7 @@
 }
 
 .digits .bottom-half {
-	background: whiteSmoke;
+	background: #e5e5e5;
 	border-radius: 0px 0px 10px 10px ;
 }
 
@@ -70,7 +70,7 @@
 
 .digits .labels {
 	text-align: right;
-	color: #999;	
+	color: #111;	
 }
 
 .digits .label {
@@ -78,11 +78,11 @@
 	width: 210px;
 	text-align: center;
 	font-family: helvetica, sans;
-	font-size: 12px;
+	font-size: 11px;
 	letter-spacing: 1px;
 	font-weight: bold;
 	text-transform: uppercase;
-	padding: 10px 0;
+	margin: 20px 0;
 }
 
 .digits .label.hours,
