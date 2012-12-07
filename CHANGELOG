@@ -2,8 +2,6 @@
 Upcoming Versions
 -----------------
 
-- Fix initial delay -- timer may be off by a few milliseconds
-
 - More skins
 
 - Fire events on specific ranges
@@ -13,6 +11,13 @@ Upcoming Versions
 - Responsive
 
 - IE Support + Safari 5 + Others
+
+
+
+0.9.1 (December 6, 2012)
+-----------------------
+
+- Fixed initial delay -- timer may be off by a few milliseconds
 
 - Cleanup
 
