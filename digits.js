@@ -24,15 +24,15 @@ var JS = {
     return el;
   },
 
-  batchClass: function (parent, selector, className, remove) {
-    var els = parent.querySelectorAll(selector),
+  class: function (params) {
+    var els = params.parent.querySelectorAll(params.selector),
       e;
 
     for (e = 0; e < els.length; e += 1) {
-      if (remove) {
-        els[e].classList.remove(className);
-      } else {
-        els[e].classList.add(className);
+      if (params.mode === 'remove') {
+        els[e].classList.remove(params.className);
+      } else if (params.mode === 'add') {
+        els[e].classList.add(params.className);
       }
     }
   }
@@ -47,23 +47,6 @@ var Digit = function (params) {
     digitWrapper,
     ripple,
     interval;
-
-  if (params) {
-    params.max = params.max || 9;
-    params.delay = params.delay || 1000;
-    params.first = params.first || false;
-    params.start = params.start >= 0 ? params.start : params.max;
-    params.group = params.group || false;
-    params.play = params.play || false;
-    params.animationDelay = params.animationDelay || '.20s';
-    params.name = params.name  || [];
-
-    params.name.push('digit');
-    current = params.start;
-
-  } else {
-    throw new Error('Params not Defined');
-  }
 
   function createDigit(no) {
     var topHalf,
@@ -118,9 +101,9 @@ var Digit = function (params) {
       f = 0;
     }
 
-    JS.batchClass(digitWrapper, type + '.no-' + f, 'no-animation');
-    JS.batchClass(digitWrapper, type + '.no-' + f, 'show', true);
-    JS.batchClass(digitWrapper, type + '.no-' + f, 'roll-over', true);
+    JS.class({ parent: digitWrapper, selector: type + '.no-' + f, className: 'no-animation', mode: 'add' });
+    JS.class({ parent: digitWrapper, selector: type + '.no-' + f, className: 'show', mode: 'remove' });
+    JS.class({ parent: digitWrapper, selector: type + '.no-' + f, className: 'roll-over', mode: 'remove' });
   }
 
   function bottomHalfZeroZindex(i) {
@@ -130,7 +113,6 @@ var Digit = function (params) {
   }
 
   function tickTock() {
-    // Reset max number
     if (current === 0) {
       digitWrapper.querySelector('.bottom-half.no-' + getMax()).style.zIndex = 1;
     }
@@ -148,12 +130,12 @@ var Digit = function (params) {
 
     // Prepare for next animation
     setTimeout(function () {
-      JS.batchClass(digitWrapper, '.top-half', 'no-animation', true);
-      JS.batchClass(digitWrapper, '.bottom-half', 'no-animation', true);
+      JS.class({ parent: digitWrapper, selector: '.top-half', className: 'no-animation', mode: 'remove' });
+      JS.class({ parent: digitWrapper, selector:'.bottom-half', className: 'no-animation', mode: 'remove' });
     }, parseFloat(params.animationDelay) * 1000 * 3);
 
     // Animate top half
-    JS.batchClass(digitWrapper, '.top-half.no-' + current, 'roll-over');
+    JS.class({ parent: digitWrapper, selector: '.top-half.no-' + current, className: 'roll-over', mode: 'add' });
 
     // Affect nearby digits
     if (ripple && current === 0) {
@@ -164,7 +146,7 @@ var Digit = function (params) {
     current = current === 0 ? getMax() : --current;
 
     // Finish animation
-    JS.batchClass(digitWrapper, '.no-' + current, 'show');
+    JS.class({ parent: digitWrapper, selector: '.no-' + current, className: 'show', mode: 'add' });
 
     // Stop Timer
     if (params.play && ripple && current === 0) {
@@ -178,6 +160,24 @@ var Digit = function (params) {
 
   function build() {
     var d;
+
+    if (params) {
+      params.max = params.max || 9;
+      params.delay = params.delay || 1000;
+      params.first = params.first || false;
+      params.start = params.start >= 0 ? params.start : params.max;
+      params.group = params.group || false;
+      params.play = params.play || false;
+      params.animationDelay = params.animationDelay || '.20s';
+      params.name = params.name  || [];
+      params.offset = params.offset || 0;
+
+      params.name.push('digit');
+      current = params.start;
+
+    } else {
+      throw new Error('Params not Defined');
+    }
 
     digitWrapper = JS.createElement({ type: 'div', classes: params.name });
     topHalfWrapper = JS.createElement({ parent: digitWrapper, type: 'div', classes: ['top-half-wrapper'] });
@@ -195,7 +195,6 @@ var Digit = function (params) {
 
     bottomHalfZeroZindex(params.start);
   }
-
 
   this.isMax = function () {
     return current === params.max;
@@ -231,7 +230,11 @@ var Digit = function (params) {
 
   function animate() {
     if (params.play) {
-      interval = setInterval(function () { tickTock(); }, params.delay);
+      setTimeout(function () {
+        interval = setInterval(function () { 
+          tickTock(); 
+        }, params.delay);
+      }, params.offset);
     }
   }
 
@@ -248,21 +251,6 @@ var Digits = function (params) {
       countdown: 'countdown',
       statistics: 'statistics'
     };    
-
-  if (params) {
-    params.wrapper = params.wrapper && document.querySelector(params.wrapper);
-    params.mode = params.mode || 'countdown';
-    params.labels = params.labels || false;
-
-    if (!params.wrapper) {
-      throw Error('Missing parameters');
-    } else {
-      params.wrapper.innerHTML = '';
-      params.wrapper = JS.createElement({ parent: params.wrapper, type: 'div', classes: [classes.main] });
-    }
-  } else {
-    throw Error('Params not defined');
-  }
 
   this.changeValue = function(newValue) {
     var p = digits.length - 1;
@@ -305,6 +293,7 @@ var Digits = function (params) {
       minutes,
       seconds,
       labels,
+      offset,
       diff;
 
     if (!params.to) {
@@ -321,7 +310,10 @@ var Digits = function (params) {
       hours = Math.floor((diff / 1000 / 60 / 60) - (days * 24)).toString();
       minutes = Math.floor(((diff / 1000 / 60 / 60) - (days * 24) - hours) * 60).toString();
       seconds = Math.floor(((((diff / 1000 / 60 / 60) - (days * 24) - hours) * 60) - minutes) * 60).toString();
-
+  
+      // Fix initial out-of-sync delay
+      offset = diff % 1000;
+    
       // Add Leading zeros
       hours = hours.length === 1 ? '0' + hours : hours;
       minutes = minutes.length === 1 ? '0' + minutes : minutes;
@@ -346,9 +338,9 @@ var Digits = function (params) {
 
     // Seconds
     digits.push(new Digit({ name: ['second', 'second-1'], ready: params.ready, wrapper: params.wrapper, start: parseInt(seconds[0]), max: 5 }));
-    digits.push(new Digit({ name: ['second', 'second-2'], ready: params.ready, wrapper: params.wrapper, start: parseInt(seconds[1]), play: diff > 0 ? true : false }));
+    digits.push(new Digit({ name: ['second', 'second-2'], ready: params.ready, wrapper: params.wrapper, start: parseInt(seconds[1]), play: diff > 0 ? true : false, offset: offset }));
 
-    // Fire ready event when animation is not started
+    // Fire ready event when countdown is not required
     if (diff <= 0) {
       params.ready();
     }
@@ -369,22 +361,42 @@ var Digits = function (params) {
     }
   }
 
-  // Main Class
-  params.wrapper.classList.add(classes.main);
+  function init() {
+    // Check params
+    if (params) {
+      params.wrapper = params.wrapper && document.querySelector(params.wrapper);
+      params.mode = params.mode || 'countdown';
+      params.labels = params.labels || false;
 
-  // Plugin mode
-  switch (params.mode) {
-    case 'countdown':
-      params.wrapper.classList.add(classes.countdown);
-      countdown();
-      break;
+      if (!params.wrapper) {
+        throw Error('Missing parameters');
+      } else {
+        params.wrapper.innerHTML = '';
+        params.wrapper = JS.createElement({ parent: params.wrapper, type: 'div', classes: [classes.main] });
+      }
+    } else {
+      throw Error('Params not defined');
+    }
 
-    case 'statistics':
-      params.wrapper.classList.add(classes.statistics);
-      statistics();
-      break;
+    // Main Class
+    params.wrapper.classList.add(classes.main);
 
-    default:
-      break;
+    // Plugin mode
+    switch (params.mode) {
+      case 'countdown':
+        params.wrapper.classList.add(classes.countdown);
+        countdown();
+        break;
+
+      case 'statistics':
+        params.wrapper.classList.add(classes.statistics);
+        statistics();
+        break;
+
+      default:
+        break;
+    }
   }
+
+  init();
 }
